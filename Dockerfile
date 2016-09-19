@@ -14,7 +14,7 @@ RUN curl -L ${ANDROID_SDK_URL} | tar xz -C /usr/local
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 
 # Install Android SDK components
-ENV ANDROID_SDK_COMPONENTS platform-tools,build-tools-21.1.2,build-tools-23.0.1
+ENV ANDROID_SDK_COMPONENTS platform-tools,build-tools-21.1.2,build-tools-23.0.2
 RUN echo y | ${ANDROID_HOME}/tools/android update sdk --no-ui --all --filter "${ANDROID_SDK_COMPONENTS}"
 RUN echo y | ${ANDROID_HOME}/tools/android update sdk --no-ui --all --filter extra-android-m2repository
 RUN echo y | ${ANDROID_HOME}/tools/android update sdk --no-ui --all --filter android-24
