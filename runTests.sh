@@ -1,2 +1,2 @@
 #!/bin/bash
-./TestDemo/gradlew test
+echo "asdasd";
