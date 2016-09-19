@@ -30,9 +30,9 @@ RUN cd ./epsdemo
 RUN git clone https://ilaszlo:ilaszlo1@github.com/columbooo/eps-demo.git
 # RUN eps-demo/TestDemo/gradlew tasks
 
-RUN apt-get install apt-transport-https
-RUN apt-get update
-RUN echo "deb https://download.go.cd /" | tee /etc/apt/sources.list.d/gocd.list
-RUN curl https://download.go.cd/GOCD-GPG-KEY.asc | apt-key add -
-RUN apt-get update
-RUN apt-get install go-agent
+# RUN apt-get install apt-transport-https
+# RUN apt-get update
+# RUN echo "deb https://download.go.cd /" | tee /etc/apt/sources.list.d/gocd.list
+# RUN curl https://download.go.cd/GOCD-GPG-KEY.asc | apt-key add -
+# RUN apt-get update
+# RUN apt-get install go-agent
