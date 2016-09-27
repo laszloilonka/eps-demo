@@ -7,6 +7,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import rx.Observable;
 
 /**
  * Created by ilaszlo on 13/09/16.
@@ -15,7 +16,7 @@ import retrofit2.http.Path;
 public interface DemoApi {
 
     @POST("/user")
-    Call<UserInfo> login(@Body UserCredentials credentials);
+    Observable<UserInfo> login(@Body UserCredentials credentials);
 
     @GET("/{userId}/vehicles")
     Call<Vehicle[]> getVehicles(@Path("userId") Long userId);

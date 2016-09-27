@@ -19,6 +19,8 @@ import javax.inject.Inject;
 import icell.hu.testdemo.model.UserInfo;
 import icell.hu.testdemo.network.DemoApi;
 import icell.hu.testdemo.network.DemoClient;
+import icell.hu.testdemo.network.LoginListener;
+import icell.hu.testdemo.network.RXManager;
 import icell.hu.testdemo.network.UserCredentials;
 import icell.hu.testdemo.singleton.ActivityPresenter;
 import icell.hu.testdemo.singleton.DemoCredentials;
@@ -26,6 +28,7 @@ import icell.hu.testdemo.singleton.SelectedUser;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscription;
 
 public class LoginActivity extends AppCompatActivity implements Callback<UserInfo>, TextView.OnEditorActionListener {
 
@@ -41,12 +44,16 @@ public class LoginActivity extends AppCompatActivity implements Callback<UserInf
     @Inject
     SelectedUser selectedUser;
 
+    @Inject
+    RXManager rxManager;
+
     private EditText emailText;
     private EditText passwordText;
     private View progressView;
     private View loginFormView;
 
     private DemoApplication demoApplication;
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +121,29 @@ public class LoginActivity extends AppCompatActivity implements Callback<UserInf
             demoCredentials.setPassword(password);
             showProgress(true);
             DemoApi demoApi = demoClient.getDemoApi();
-            Call<UserInfo> userCall = demoApi.login(new UserCredentials(email, password));
-            userCall.enqueue(this);
+            subscription = rxManager.login(new LoginListener() {
+                @Override
+                public void loginFinished(UserInfo userInfo) {
+                    showProgress(false);
+                    selectedUser.setUserInfo(userInfo);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activityPresenter.startActivity(LoginActivity.this, intent);
+                }
+
+                @Override
+                public void loginFailed() {
+                    showProgress(false);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (subscription != null && subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
         }
     }
 

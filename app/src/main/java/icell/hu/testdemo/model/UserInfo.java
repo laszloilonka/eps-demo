@@ -1,5 +1,7 @@
 package icell.hu.testdemo.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ilaszlo on 13/09/16.
  */
@@ -11,7 +13,6 @@ public class UserInfo {
     private String firstName;
     private String lastName;
     private Long balance;
-
 
     public UserInfo() {
     }
