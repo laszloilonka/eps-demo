@@ -18,8 +18,8 @@ public interface DemoApi {
     @POST("/user")
     Observable<UserInfo> login(@Body UserCredentials credentials);
 
-    @GET("/{userId}/vehicles")
-    Call<Vehicle[]> getVehicles(@Path("userId") Long userId);
+    @GET("/user/{userId}/vehicles")
+    Observable<Vehicle[]> getVehicles(@Path("userId") Long userId);
 
     //@POST("/user/repos")
     //Call<Repository> createRepository(@Header(HEADER_AUTHORIZATION) String authorization, @Body RepositoryRequest repository);

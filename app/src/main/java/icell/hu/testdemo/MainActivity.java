@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -12,14 +11,14 @@ import javax.inject.Inject;
 
 import icell.hu.testdemo.model.Vehicle;
 import icell.hu.testdemo.network.DemoClient;
+import icell.hu.testdemo.network.Interfaces.VehicleListener;
+import icell.hu.testdemo.network.RXManager;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;
 import icell.hu.testdemo.view.VehiclesAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Subscription;
 
-public class MainActivity extends AppCompatActivity implements Callback<Vehicle[]> {
+public class MainActivity extends AppCompatActivity implements VehicleListener {
 
     @Inject
     DemoClient demoClient;
@@ -29,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements Callback<Vehicle[
 
     @Inject
     SelectedUser selectedUser;
+
+    @Inject
+    RXManager rxManager;
 
     private Spinner spinner;
    /* private RecyclerView recyclerView;
@@ -54,10 +56,23 @@ public class MainActivity extends AppCompatActivity implements Callback<Vehicle[
         
         refreshRepositories();
     }
-
+    Subscription subscription ;
     private void refreshRepositories() {
-        Call<Vehicle[]> call = demoClient.getDemoApi().getVehicles(selectedUser.getUserInfo().getUserId());
-        call.enqueue(this);
+        /*Call<Vehicle[]> call = demoClient.getDemoApi().getVehicles(selectedUser.getUserInfo().getUserId());
+        call.enqueue(this);*/
+        if ( subscription == null )
+        subscription = rxManager .getAvailableVehicles( selectedUser , this );
+
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (subscription != null && subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 
     private void createRepository() {
@@ -100,16 +115,16 @@ public class MainActivity extends AppCompatActivity implements Callback<Vehicle[
         return false;
     }
 
+
     @Override
-    public void onResponse(Call<Vehicle[]> call, Response<Vehicle[]> response) {
-       // adapter = new VehicleListAdapter(response.body());
-       // recyclerView.setAdapter(adapter);
-        VehiclesAdapter adapter = new VehiclesAdapter(response.body());
+    public void vehiclesFinished(Vehicle[] vehicles) {
+        VehiclesAdapter adapter = new VehiclesAdapter( vehicles );
         spinner.setAdapter(adapter);
     }
 
     @Override
-    public void onFailure(Call<Vehicle[]> call, Throwable t) {
-
+    public void failed() {
+        Toast.makeText(this, getString(R.string.error_something_went_wrong) + " (" +
+                selectedUser.getUserInfo().getUserId() + ")!" , Toast.LENGTH_SHORT ) . show ( ) ;
     }
 }

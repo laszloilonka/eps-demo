@@ -10,6 +10,7 @@ public class Vehicle {
     private Long vehicleId;
     private String plateNumber;
 
+
     public Vehicle() {
     }
 
