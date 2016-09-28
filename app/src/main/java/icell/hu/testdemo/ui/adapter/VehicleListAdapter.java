@@ -1,4 +1,4 @@
-package icell.hu.testdemo.view;
+package icell.hu.testdemo.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

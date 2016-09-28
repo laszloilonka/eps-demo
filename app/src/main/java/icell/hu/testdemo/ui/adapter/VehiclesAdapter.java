@@ -1,4 +1,4 @@
-package icell.hu.testdemo.view;
+package icell.hu.testdemo.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

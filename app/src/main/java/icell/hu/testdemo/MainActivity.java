@@ -15,10 +15,14 @@ import icell.hu.testdemo.network.Interfaces.VehicleListener;
 import icell.hu.testdemo.network.RXManager;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;
-import icell.hu.testdemo.view.VehiclesAdapter;
+import icell.hu.testdemo.ui.activity.BaseActivity;
+import icell.hu.testdemo.ui.adapter.VehiclesAdapter;
+import icell.hu.testdemo.ui.fragment.BaseFragment;
+import icell.hu.testdemo.ui.fragment.LoginFragment;
+import icell.hu.testdemo.ui.fragment.VehiclesFragment;
 import rx.Subscription;
 
-public class MainActivity extends AppCompatActivity implements VehicleListener {
+public class MainActivity extends BaseActivity implements VehicleListener {
 
     @Inject
     DemoClient demoClient;
@@ -32,70 +36,56 @@ public class MainActivity extends AppCompatActivity implements VehicleListener {
     @Inject
     RXManager rxManager;
 
-    private Spinner spinner;
-   /* private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;*/
-    private DemoApplication demoApplication;
+    Subscription subscription ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getDemoApplication().getComponent().inject(this);
-        setContentView(R.layout.activity_main);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new VehiclesFragment() , this.toString())
+                    .commit();
 
+            Toast.makeText(this, selectedUser.getUserInfo().getLastName(), Toast.LENGTH_SHORT).show();
 
-        //recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        //recyclerView.setHasFixedSize(true);
-        //layoutManager = new LinearLayoutManager(this);
-        //recyclerView.setLayoutManager(layoutManager);
+            refreshRepositories();
 
-        Toast.makeText(this, selectedUser.getUserInfo().getLastName(), Toast.LENGTH_SHORT).show();
-        
-        refreshRepositories();
+        }
+
     }
-    Subscription subscription ;
+
+    /**
+     * Just for TEST
+     */
     private void refreshRepositories() {
-        /*Call<Vehicle[]> call = demoClient.getDemoApi().getVehicles(selectedUser.getUserInfo().getUserId());
-        call.enqueue(this);*/
-        if ( subscription == null )
-        subscription = rxManager .getAvailableVehicles( selectedUser , this );
-
-
+        if ( subscription == null ) {
+            subscription = rxManager.getAvailableVehicles(selectedUser, this);
+            return;
+        }
+        if ( ! subscription.isUnsubscribed() ){
+            subscription.unsubscribe();
+        }
+        subscription = rxManager.getAvailableVehicles(selectedUser, this);
 
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDestroy() {
+        super.onDestroy() ;
         if (subscription != null && subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
+        subscription = null;
     }
 
     private void createRepository() {
-      /*  Call<Repository> call = demoClient.getDemoApi().createRepository(demoCredentials.getBasicScheme(), new RepositoryRequest("test" + recyclerView.getAdapter().getItemCount()));
-        call.enqueue(new Callback<Repository>() {
-            @Override
-            public void onResponse(Call<Repository> call, Response<Repository> response) {
-                refreshRepositories();
-            }
 
-            @Override
-            public void onFailure(Call<Repository> call, Throwable t) {
-
-            }
-        });*/
     }
 
-    public DemoApplication getDemoApplication() {
-        if (demoApplication == null) {
-            demoApplication = ((DemoApplication) getApplicationContext());
-        }
-        return demoApplication;
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,8 +108,10 @@ public class MainActivity extends AppCompatActivity implements VehicleListener {
 
     @Override
     public void vehiclesFinished(Vehicle[] vehicles) {
-        VehiclesAdapter adapter = new VehiclesAdapter( vehicles );
-        spinner.setAdapter(adapter);
+
+        Toast.makeText(this, "Activity - Vehicles cathced: " + vehicles.length , Toast.LENGTH_SHORT )
+                . show ( ) ;
+
     }
 
     @Override
