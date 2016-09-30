@@ -2,7 +2,9 @@ package icell.hu.testdemo;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import retrofit2.mock.MockRetrofit;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -13,6 +15,5 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
-
     }
 }

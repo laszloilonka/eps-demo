@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import icell.hu.testdemo.model.Vehicle;
 import icell.hu.testdemo.network.DemoClient;
-import icell.hu.testdemo.network.Interfaces.VehicleListener;
+import icell.hu.testdemo.network.listener.VehicleListener;
 import icell.hu.testdemo.network.RXManager;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;

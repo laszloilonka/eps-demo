@@ -3,8 +3,8 @@ package icell.hu.testdemo.network;
 
 import icell.hu.testdemo.model.UserInfo;
 import icell.hu.testdemo.model.Vehicle;
-import icell.hu.testdemo.network.Interfaces.LoginListener;
-import icell.hu.testdemo.network.Interfaces.VehicleListener;
+import icell.hu.testdemo.network.listener.LoginListener;
+import icell.hu.testdemo.network.listener.VehicleListener;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;
 import rx.Observable;
@@ -20,6 +20,10 @@ import rx.schedulers.Schedulers;
 public class RXManagerImpl implements RXManager {
 
 
+    public void setDemoClient(DemoClient demoClient) {
+        this.demoClient = demoClient;
+    }
+
     private DemoClient demoClient;
 
     public RXManagerImpl(DemoClient demoClient) {
@@ -27,23 +31,23 @@ public class RXManagerImpl implements RXManager {
     }
 
     @Override
-    public Subscription login ( DemoCredentials demoCredentials ,
-                                final LoginListener loginListener) {
-
+    public Subscription login(DemoCredentials demoCredentials,
+                              final LoginListener loginListener) {
         DemoApi demoApi = demoClient.getDemoApi();
 
-        UserCredentials user = new UserCredentials (
-                demoCredentials . getUsername() ,
-                demoCredentials . getPassword() ) ;
+        UserCredentials user = new UserCredentials(
+                demoCredentials.getUsername(),
+                demoCredentials.getPassword());
 
-        Observable<UserInfo> userCall = demoApi . login( user );                                    // /user/ Post
+        Observable<UserInfo> userCall = demoApi.login(user);                                    // /user/ Post
 
         Subscription subscription = userCall.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<UserInfo>() {
 
                     @Override
-                    public void onCompleted() {}
+                    public void onCompleted() {
+                    }
 
                     @Override
                     public void onError(Throwable e) {
@@ -58,32 +62,30 @@ public class RXManagerImpl implements RXManager {
         return subscription;
     }
 
-
-
     @Override
-    public Subscription getAvailableVehicles(SelectedUser user , final VehicleListener listener ) {
+    public Subscription getAvailableVehicles(SelectedUser user, final VehicleListener listener) {
+        DemoApi demoApi = demoClient.getDemoApi();
+        Observable<Vehicle[]> vehicles = demoApi.getVehicles(user.getUserInfo()
+                .getUserId());                                                                 // getUserId -> /user/{userID}/vehicle
 
-        DemoApi demoApi = demoClient.getDemoApi ( ) ;
-        Observable<Vehicle[]> vehicles = demoApi . getVehicles( user . getUserInfo ( )
-                . getUserId ( ) ) ;                                                                 // getUserId -> /user/{userID}/vehicle
-
-        Subscription subscription = vehicles . subscribeOn ( Schedulers . newThread ( ) )
-                . observeOn ( AndroidSchedulers . mainThread ( ) )
-                . subscribe ( new Subscriber < Vehicle [ ] > () {
+        Subscription subscription = vehicles.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Vehicle[]>() {
                     @Override
-                    public void onCompleted ( ) {}
-
-                    @Override
-                    public void onError ( Throwable e ) {
-                        listener .failed( ) ;
-                        e.printStackTrace ( ) ;
+                    public void onCompleted() {
                     }
 
                     @Override
-                    public void onNext ( Vehicle [ ] vehicles) {                                    // on UIThread
-                        listener . vehiclesFinished( vehicles ) ;                                   // send back (VehicleListener)
+                    public void onError(Throwable e) {
+                        listener.failed();
+                        e.printStackTrace();
                     }
-                }) ;
+
+                    @Override
+                    public void onNext(Vehicle[] vehicles) {                                    // on UIThread
+                        listener.vehiclesFinished(vehicles);                                   // send back (VehicleListener)
+                    }
+                });
 
         return subscription;
     }

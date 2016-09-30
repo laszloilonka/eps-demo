@@ -17,11 +17,9 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import icell.hu.testdemo.model.UserInfo;
-import icell.hu.testdemo.network.DemoApi;
 import icell.hu.testdemo.network.DemoClient;
-import icell.hu.testdemo.network.Interfaces.LoginListener;
+import icell.hu.testdemo.network.listener.LoginListener;
 import icell.hu.testdemo.network.RXManager;
-import icell.hu.testdemo.network.UserCredentials;
 import icell.hu.testdemo.singleton.ActivityPresenter;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;
@@ -120,14 +118,14 @@ public class LoginActivity extends AppCompatActivity implements Callback<UserInf
             demoCredentials.setUsername(email);
             demoCredentials.setPassword(password);
             showProgress(true);
-            subscription = rxManager.login( demoCredentials , new LoginListener() {
+            subscription = rxManager.login(demoCredentials, new LoginListener() {
                 @Override
                 public void loginFinished(UserInfo userInfo) {
                     showProgress(false);
                     selectedUser.setUserInfo(userInfo);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activityPresenter . startActivity ( LoginActivity.this , intent ) ;
+                    activityPresenter.startActivity(LoginActivity.this, intent);
                 }
 
                 @Override
@@ -178,8 +176,8 @@ public class LoginActivity extends AppCompatActivity implements Callback<UserInf
         if (response.isSuccessful()) {
             selectedUser.setUserInfo(response.body());
             Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-            activityPresenter . startActivity ( LoginActivity.this , intent ) ;
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            activityPresenter.startActivity(LoginActivity.this, intent);
         } else {
             passwordText.setError(getString(R.string.error_incorrect_password));
             passwordText.requestFocus();

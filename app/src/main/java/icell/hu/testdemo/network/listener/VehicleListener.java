@@ -1,6 +1,5 @@
-package icell.hu.testdemo.network.Interfaces;
+package icell.hu.testdemo.network.listener;
 
-import icell.hu.testdemo.model.UserInfo;
 import icell.hu.testdemo.model.Vehicle;
 
 /**

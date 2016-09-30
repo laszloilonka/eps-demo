@@ -1,7 +1,7 @@
 package icell.hu.testdemo.network;
 
-import icell.hu.testdemo.network.Interfaces.LoginListener;
-import icell.hu.testdemo.network.Interfaces.VehicleListener;
+import icell.hu.testdemo.network.listener.LoginListener;
+import icell.hu.testdemo.network.listener.VehicleListener;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;
 import rx.Subscription;
