@@ -2,9 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/new_repos"
-        android:title="New repository" />
-    <item
-        android:id="@+id/refresh_repos"
-        android:title="Refresh vehicles" />
+        android:id="@+id/main_refresh"
+        android:title="@string/promt_refresh" />
 </menu>

@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import com.squareup.leakcanary.RefWatcher;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Inject;
 
 import butterknife.Unbinder;
@@ -25,6 +27,10 @@ public class BaseFragment extends Fragment {
 
     @Inject
     protected DemoApplication application;
+
+    @Inject
+    protected EventBus bus;
+
     /**
      * UnBind views {@link butterknife.ButterKnife}
      */
@@ -37,6 +43,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
     }
 
     @Override
@@ -48,6 +55,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        bus.unregister(this);
         if ( unbinder != null ) {
             unbinder.unbind();
         }

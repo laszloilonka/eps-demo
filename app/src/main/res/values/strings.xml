@@ -2,6 +2,7 @@
     <string name="app_name">TestDemo</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_main">Vehicles</string>
+    <string name="title_fragment_parkings">Parkings</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -19,6 +20,17 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- Strings related to Manage -->
+    <string name="manage_vehicles">Manage your vehicles</string>
+    <string name="manage_parkings">Manage your parkings</string>
+
+    <string name="promt_refresh">Refresh</string>
+
+
+    <!-- Strings related to vehicles -->
+    <string name="vehicles_added">Your vehicles registered!</string>
+
 
 
 </resources>

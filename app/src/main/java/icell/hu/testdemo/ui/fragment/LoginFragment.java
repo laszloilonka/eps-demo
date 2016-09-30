@@ -44,7 +44,7 @@ public class LoginFragment extends BaseFragment {
     public View onCreateView ( LayoutInflater inflater,
                               ViewGroup container,
                               Bundle savedInstanceState) {
-        View layout = inflater.inflate ( R.layout.activity_login , container, false);               //  TODO fragment_login
+        View layout = inflater.inflate ( R.layout. activity_login, container, false);               //  TODO fragment_login
 
         return layout;
     }

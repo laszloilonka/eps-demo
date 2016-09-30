@@ -2,6 +2,8 @@ package icell.hu.testdemo.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,22 +18,23 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import icell.hu.testdemo.DemoApplication;
+import icell.hu.testdemo.MainActivity;
 import icell.hu.testdemo.R;
+import icell.hu.testdemo.model.Parking;
 import icell.hu.testdemo.model.Vehicle;
-import icell.hu.testdemo.network.Interfaces.VehicleListener;
+import icell.hu.testdemo.network.Interfaces.ParkingListener;
 import icell.hu.testdemo.network.RXManager;
-import icell.hu.testdemo.network.RXManagerImpl;
+import icell.hu.testdemo.singleton.Parkings;
 import icell.hu.testdemo.singleton.SelectedUser;
 import icell.hu.testdemo.singleton.Vehicles;
 import icell.hu.testdemo.ui.adapter.VehiclesAdapter;
+import icell.hu.testdemo.ui.adapter.parking.ParkingAdapter;
 
 /**
- * Created by User on 2016. 09. 28..
+ * Created by User on 2016. 09. 29..
  */
 
-public class VehiclesFragment extends BaseFragment implements VehicleListener {
-
-    public static final String TAG = VehiclesFragment.class.getSimpleName();
+public class ParkingFragment extends BaseFragment implements ParkingListener {
 
     @Inject
     SelectedUser selectedUser;
@@ -40,12 +43,14 @@ public class VehiclesFragment extends BaseFragment implements VehicleListener {
     RXManager rxManager;
 
     @Inject
-    Vehicles vehicles;
-
-    @BindView(R.id.spinner) Spinner spinner;
+    Parkings parkings;
 
 
-    VehiclesAdapter adapter;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
+
+    ParkingAdapter adapter;
 
 
     @Override
@@ -58,7 +63,7 @@ public class VehiclesFragment extends BaseFragment implements VehicleListener {
     public View onCreateView (LayoutInflater inflater,
                               ViewGroup container,
                               Bundle savedInstanceState) {
-        View layout = inflater.inflate ( R.layout.activity_main , container, false);                //  TODO fragment_main
+        View layout = inflater.inflate ( R.layout.fragment_parking , container, false);                //  TODO fragment_main
         return layout;
     }
 
@@ -66,10 +71,12 @@ public class VehiclesFragment extends BaseFragment implements VehicleListener {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind (this, view);
-        Log.d ( TAG , "register" ) ;
-        if ( vehicles .veichles ( ) != null )
-            setAdapter ( vehicles . veichles ( ) ) ;
-        subscription = rxManager . getVehicles ( selectedUser, this ) ;
+
+        ((MainActivity) getActivity()).getSupportActionBar()
+                .setTitle(R.string.title_fragment_parkings);
+        if ( parkings.parking ( ) != null )
+            setAdapter ( parkings.parking ( ) ) ;
+        subscription = rxManager . getParkings ( selectedUser , this ) ;
 
 
     }
@@ -82,9 +89,12 @@ public class VehiclesFragment extends BaseFragment implements VehicleListener {
     }
 
 
-    private void setAdapter ( List<Vehicle> vehicles ) {
-        adapter = new VehiclesAdapter(vehicles);
-        spinner.setAdapter(adapter);
+    private void setAdapter ( List<Parking> parkings ) {
+        adapter = new ParkingAdapter( (DemoApplication) getActivity().getApplication() , parkings);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter( adapter);
     }
 
     private void checkList() {
@@ -94,18 +104,12 @@ public class VehiclesFragment extends BaseFragment implements VehicleListener {
 
 
     @Override
-    public void vehiclesLoaded(List<Vehicle> vehicles ) {
-        if ( adapter == null ){
-            setAdapter(vehicles);
-            return;
-        }else
-            checkList();
+    public void parkingLoaded(List<Parking> parkings) {
+        setAdapter(parkings);
     }
 
-
     @Override
-    public void vehiclesAdded (Vehicle vehicles) {                                                   // TODO new event eseten!!
-        Toast.makeText(getActivity(), getResources().getString(R.string.vehicles_added) ,
-                Toast.LENGTH_SHORT ) . show ( ) ;
+    public void onProcessFinished(Parking parking) {
+
     }
 }

@@ -5,6 +5,5 @@
             android:id="@+id/info_text"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+            android:gravity="center" />
 </LinearLayout>

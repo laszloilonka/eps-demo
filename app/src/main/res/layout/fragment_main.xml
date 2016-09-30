@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="match_parent">
+
+    <Button
+        android:text="@string/manage_vehicles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/frg_main_manage_vehicles" />
+
+    <Button
+        android:text="@string/manage_parkings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textColor="@color/colorPrimary"
+        android:id="@+id/frg_main_manage_parking" />
+
+</LinearLayout>
