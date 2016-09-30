@@ -12,8 +12,12 @@ import icell.hu.testdemo.network.RXManagerImpl;
 import icell.hu.testdemo.singleton.ActivityPresenter;
 import icell.hu.testdemo.singleton.ActivityPresenterImpl;
 import icell.hu.testdemo.singleton.DemoCredentials;
+import icell.hu.testdemo.singleton.Parkings;
+import icell.hu.testdemo.singleton.ParkingsImpl;
 import icell.hu.testdemo.singleton.SelectedUser;
 import icell.hu.testdemo.singleton.SelectedUserImpl;
+import icell.hu.testdemo.singleton.Vehicles;
+import icell.hu.testdemo.singleton.VehiclesImpl;
 
 @Module
 public class DemoModule {
@@ -57,4 +61,15 @@ public class DemoModule {
         return new RXManagerImpl(demoClient);
     }
 
+    @Provides
+    @Singleton
+    public Vehicles getVehicles() {
+        return new VehiclesImpl();
+    }
+
+    @Provides
+    @Singleton
+    public Parkings getParking() {
+        return new ParkingsImpl();
+    }
 }

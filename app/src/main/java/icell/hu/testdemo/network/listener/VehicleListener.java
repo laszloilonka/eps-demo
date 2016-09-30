@@ -1,5 +1,6 @@
 package icell.hu.testdemo.network.listener;
 
+import icell.hu.testdemo.model.UserInfo;
 import icell.hu.testdemo.model.Vehicle;
 
 /**
@@ -8,7 +9,8 @@ import icell.hu.testdemo.model.Vehicle;
 
 public interface VehicleListener extends ErrorListener {
 
-    void vehiclesFinished ( Vehicle[] vehicles );
+    void vehiclesLoaded(List<Vehicle> vehicles ) ;
 
+    void vehiclesAdded( Vehicle vehicles ) ;
 
 }
