@@ -2,18 +2,14 @@ package icell.hu.testdemo.network;
 
 import java.util.List;
 
-import icell.hu.testdemo.model.AddVehicle;
 import icell.hu.testdemo.model.Parking;
-import icell.hu.testdemo.model.StartParking;
-import icell.hu.testdemo.model.StopParking;
-import icell.hu.testdemo.model.Vehicle;
 import icell.hu.testdemo.model.UserInfo;
+import icell.hu.testdemo.model.Vehicle;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * Created by ilaszlo on 13/09/16.
@@ -21,31 +17,25 @@ import rx.Observable;
 
 public interface DemoApi {
 
+    // eventbus
+
     @POST("/user")
-    Observable<UserInfo> login(@Body UserCredentials credentials);
+    Call<UserInfo> login(@Body UserCredentials credentiale);
 
     @GET("/user/{userId}/vehicles")
-    Observable<List<Vehicle>> getVehicles(@Path("userId") Long userId);
-
-
+    Call<List<Vehicle>> getVehicles(@Path("userId") Long userId);
 
     @POST("/user/{userId}/vehicles")
-    Observable<Vehicle> addVehicle(@Path("userId") Long userId , @Body AddVehicle vehicle );
-
-
+    Call<Vehicle> addVehicle(@Path("userId") Long userId , @Body Vehicle vehicle );
 
     @GET("/user/{userId}/current_parkings")
-    Observable<List<Parking>> getParkings(@Path("userId") Long userId);
+    Call<List<Parking>> getParkings(@Path("userId") Long userId);
 
 
     @POST("/user/{userId}/start_parking")
-    Observable<Parking> startParking(@Path("userId") Long userId , @Body StartParking startParking );
+    Call<Parking> startParking(@Path("userId") Long userId , @Body Vehicle vehicle );
 
     @POST("/user/{userId}/stop_parking")
-    Observable<Parking> startParking(@Path("userId") Long userId , @Body StopParking stopParking);
+    Call<Parking> stopParking(@Path("userId") Long userId , @Body Parking parking);
 
-
-
-    //@POST("/user/repos")
-    //Call<Repository> createRepository(@Header(HEADER_AUTHORIZATION) String authorization, @Body RepositoryRequest repository);
 }

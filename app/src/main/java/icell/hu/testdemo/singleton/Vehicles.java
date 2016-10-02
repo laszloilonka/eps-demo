@@ -10,7 +10,7 @@ import icell.hu.testdemo.model.Vehicle;
 
 public interface Vehicles {
 
-    List<Vehicle> veichles() ;
+    List<Vehicle> getVeichles() ;
 
     void setVehicles(List<Vehicle> veichles);
 

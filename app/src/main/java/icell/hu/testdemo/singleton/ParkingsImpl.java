@@ -13,12 +13,12 @@ public class ParkingsImpl implements Parkings {
     List<Parking> parkings;
 
     @Override
-    public List<Parking> parking() {
+    public List<Parking> getParkings() {
         return parkings;
     }
 
     @Override
-    public void setVehicles(List<Parking> parkings) {
+    public void setParking(List<Parking> parkings) {
         this.parkings = parkings;
     }
 }

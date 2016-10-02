@@ -11,8 +11,8 @@ import icell.hu.testdemo.model.Parking;
 
 public interface Parkings {
 
-    List<Parking> parking();
+    List<Parking> getParkings();
 
-    void setVehicles(List<Parking> parkings);
+    void setParking(List<Parking> parkings);
 
 }

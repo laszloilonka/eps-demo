@@ -6,62 +6,66 @@ package icell.hu.testdemo.model;
 
 public class Parking {
 
-    public int parkingId;
-    public int userId;
-    public int vehicleId;
-    public long updatedAt;
-    public long startedAt;
-    public long finishedAt;
+    private Integer parkingId;
+    private Integer userId;
+    private Long vehicleId;
+    private Long updatedAt;
+    private Long startedAt;
+    private Long finishedAt;
 
     public Parking() {
 
     }
 
-    public int getParkingId() {
+    public Integer getParkingId() {
         return parkingId;
     }
 
-    public void setParkingId(int parkingId) {
-        this.parkingId = parkingId;
-    }
-
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getVehicleId() {
+    public Long getVehicleId() {
         return vehicleId;
     }
 
-    public void setVehicleId(int vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public long getUpdatedAt() {
+    public Long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(long updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public long getStartedAt() {
+    public Long getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(long startedAt) {
-        this.startedAt = startedAt;
-    }
-
-    public long getFinishedAt() {
+    public Long getFinishedAt() {
         return finishedAt;
     }
 
-    public void setFinishedAt(long finishedAt) {
+    public boolean isParking(){
+        return finishedAt == null;
+    }
+
+    public void setParkingId(Integer parkingId) {
+        this.parkingId = parkingId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setStartedAt(Long startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public void setFinishedAt(Long finishedAt) {
         this.finishedAt = finishedAt;
     }
 }

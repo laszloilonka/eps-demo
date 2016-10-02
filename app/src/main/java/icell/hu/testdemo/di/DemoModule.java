@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import icell.hu.testdemo.network.DemoClient;
-import icell.hu.testdemo.network.RXManager;
-import icell.hu.testdemo.network.RXManagerImpl;
+import icell.hu.testdemo.network.EventBusManager;
+import icell.hu.testdemo.network.EventBusManagerImpl;
 import icell.hu.testdemo.singleton.ActivityPresenter;
 import icell.hu.testdemo.singleton.ActivityPresenterImpl;
 import icell.hu.testdemo.singleton.DemoCredentials;
@@ -57,8 +57,8 @@ public class DemoModule {
 
     @Provides
     @Singleton
-    public RXManager provideRxManager(DemoClient demoClient) {
-        return new RXManagerImpl(demoClient);
+    public EventBusManager provideEventBusManager(DemoClient demoClient) {
+        return new EventBusManagerImpl(demoClient);
     }
 
     @Provides

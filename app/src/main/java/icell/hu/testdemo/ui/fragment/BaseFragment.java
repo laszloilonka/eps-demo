@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import butterknife.Unbinder;
 import icell.hu.testdemo.DemoApplication;
+import icell.hu.testdemo.network.EventBusManager;
 import icell.hu.testdemo.ui.activity.BaseActivity;
 import rx.Subscription;
 
@@ -31,19 +32,21 @@ public class BaseFragment extends Fragment {
     @Inject
     protected EventBus bus;
 
+    @Inject
+    public EventBusManager eventBusManager;
+
     /**
      * UnBind views {@link butterknife.ButterKnife}
      */
     protected Unbinder unbinder;
 
-    protected Subscription subscription;
 
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bus.register(this);
+
     }
 
     @Override
@@ -55,14 +58,12 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        bus.unregister(this);
+        if ( bus.isRegistered(this) )
+            bus.unregister(this);
         if ( unbinder != null ) {
             unbinder.unbind();
         }
 
-        if (subscription != null && subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
     }
 
 

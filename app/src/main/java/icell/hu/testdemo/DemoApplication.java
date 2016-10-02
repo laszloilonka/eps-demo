@@ -35,12 +35,6 @@ public class DemoApplication extends Application {
         }
     }
 
-    public void reset() {
-        appModule = null;
-        demoModule = null;
-        demoComponent = null;
-    }
-
     public DemoComponent getComponent() {
         if (demoComponent == null) {
             demoComponent = DaggerDemoComponent.builder()

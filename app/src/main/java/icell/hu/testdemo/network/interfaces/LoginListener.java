@@ -1,4 +1,4 @@
-package icell.hu.testdemo.network.listener;
+package icell.hu.testdemo.network.interfaces;
 
 import icell.hu.testdemo.model.UserInfo;
 

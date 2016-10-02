@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import icell.hu.testdemo.R;
@@ -16,7 +17,7 @@ public class VehiclesAdapter extends BaseAdapter {
     private List<Vehicle> vehicles;
 
     public VehiclesAdapter(List<Vehicle> vehicles) {
-        this.vehicles = vehicles;
+        this.vehicles = new ArrayList<>(vehicles);
     }
 
     @Override
@@ -43,4 +44,14 @@ public class VehiclesAdapter extends BaseAdapter {
         vehicleInfoText.setText(vehicle.getVehicleId() + " - " + vehicle.getPlateNumber());
         return view;
     }
+
+    public void addNewVehicle(Vehicle newVehicle){
+        for (Vehicle vehicle: vehicles) {
+            if (newVehicle.getVehicleId() == vehicle.getVehicleId())
+                return;
+        }
+        vehicles.add(newVehicle);
+        notifyDataSetChanged();
+    }
+
 }

@@ -14,7 +14,7 @@ public class VehiclesImpl implements Vehicles {
     List<Vehicle> vehicles ;
 
     @Override
-    public List<Vehicle> veichles() {
+    public List<Vehicle> getVeichles() {
         return vehicles;
     }
 

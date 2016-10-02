@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TestDemo</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_activity_main">Vehicles</string>
+    <string name="title_fragment_vehicles">Vehicles</string>
     <string name="title_fragment_parkings">Parkings</string>
 
     <!-- Strings related to login -->
@@ -30,6 +30,28 @@
 
     <!-- Strings related to vehicles -->
     <string name="vehicles_added">Your vehicles registered!</string>
+    <string name="vehicles_data">Vehicle data:</string>
+    <string name="vehicles_parking">Vehicle parking in:
+        229 Chong Qing Nan Lu, Shibei Qu, Qingdao Shi, Shandong Sheng, China
+    </string>
+    <string name="action_stop_parking">Stop parking</string>
+    <string name="action_start_parking">Start parking</string>
+    <string name="dialog_vehicles_add">Please, enter your plate number!</string>
+    <string name="dialog_vehicles_title">Add new vehicle</string>
+    <string name="prompt_vehicle_error">Your plate number is not valid!</string>
+
+    <string name="error_get_vehicles">
+        Sorry! Your current vehicles not available! Please try again later!
+    </string>
+
+    <string name="error_add_vehicle">
+        Sorry! Something went wrong during the process! Please try again later!
+    </string>
+
+    <string name="error_get_parkings">
+        Sorry! Your current parkings not available! Please try again later!
+    </string>
+
 
 
 

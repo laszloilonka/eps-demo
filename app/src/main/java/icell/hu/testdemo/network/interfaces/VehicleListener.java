@@ -1,6 +1,7 @@
-package icell.hu.testdemo.network.listener;
+package icell.hu.testdemo.network.interfaces;
 
-import icell.hu.testdemo.model.UserInfo;
+import java.util.List;
+
 import icell.hu.testdemo.model.Vehicle;
 
 /**

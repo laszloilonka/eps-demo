@@ -1,4 +1,4 @@
-package icell.hu.testdemo.network.listener;
+package icell.hu.testdemo.network.interfaces;
 
 /**
  * Created by User on 2016. 09. 27..
