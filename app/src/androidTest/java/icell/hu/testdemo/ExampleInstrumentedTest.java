@@ -10,36 +10,25 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import icell.hu.testdemo.di.DaggerDemoComponent;
 import icell.hu.testdemo.di.DemoModule;
 import icell.hu.testdemo.model.UserInfo;
 import icell.hu.testdemo.network.DemoApi;
 import icell.hu.testdemo.network.DemoClient;
-import icell.hu.testdemo.network.RXManager;
-import icell.hu.testdemo.network.RXManagerImpl;
 import icell.hu.testdemo.singleton.ActivityPresenter;
-import icell.hu.testdemo.singleton.DemoCredentials;
 import retrofit2.Call;
-import retrofit2.Response;
 import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 /**
@@ -56,7 +45,7 @@ public class ExampleInstrumentedTest {
     DemoClient mockDemoClient = mock(DemoClient.class);
     DemoApi mockDemoApi;
     ActivityPresenter mockActivityPresenter;
-    private RXManagerImpl rxManager;
+    //private RXManagerImpl rxManager;
 
     @Before
     public void setUp() {
@@ -66,7 +55,7 @@ public class ExampleInstrumentedTest {
       //  mockDemoApi = new MockDemoApi(Observable.just(new UserInfo()), null);
 
         DemoApplication application = (DemoApplication) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
-        application.reset();
+        //application.reset();
         application.setDemoModule(new TestModule());
 
     }
@@ -83,7 +72,7 @@ public class ExampleInstrumentedTest {
         Call<UserInfo> mockCall = mock(Call.class);
         onView(withId(R.id.email)).perform(typeText("ilaszlo"));
         onView(withId(R.id.password)).perform(typeText("ilaszlo1"));
-        onView(withId(R.id.email_sign_in_button)).perform(click());
+        //onView(withId(R.id.email_sign_in_button)).perform(click());
 
         Intent expectedIntent = new Intent(activity, MainActivity.class);
         expectedIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -105,7 +94,7 @@ public class ExampleInstrumentedTest {
         Call<UserInfo> mockCall = mock(Call.class);
         onView(withId(R.id.email)).perform(typeText("ilaszlo"));
         onView(withId(R.id.password)).perform(typeText("ilaszlo1"));
-        onView(withId(R.id.email_sign_in_button)).perform(click());
+        //onView(withId(R.id.email_sign_in_button)).perform(click());
 
         Intent expectedIntent = new Intent(activity, MainActivity.class);
         expectedIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -130,10 +119,10 @@ public class ExampleInstrumentedTest {
             return mockActivityPresenter;
         }
 
-        @Override
+        /*@Override
         public RXManager provideRxManager(DemoClient demoClient) {
             rxManager = new RXManagerImpl(mockDemoClient);
             return rxManager;
-        }
+        }*/
     }
 }

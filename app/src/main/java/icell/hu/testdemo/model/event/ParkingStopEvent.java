@@ -12,8 +12,8 @@ public class ParkingStopEvent extends EventParent {
 
     public ParkingStopEvent(){}
 
-    public ParkingStopEvent(Parking vehicle) {
-        this.parking = vehicle;
+    public ParkingStopEvent(Parking parking) {
+        this.parking = parking;
     }
 
     public Parking getParking() {

@@ -42,18 +42,23 @@ public class EventBusManagerImpl implements EventBusManager{
                 demoCredentials . getUsername() ,
                 demoCredentials . getPassword() ) ;
 
-        Call<UserInfo> loginCall = demoClient.getDemoApi().login( user );
+        final Call<UserInfo> loginCall = demoClient.getDemoApi().login( user );
         loginCall.enqueue( new Callback<UserInfo>(){
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                bus.post(new LoginEvent(response.body()));
+                LoginEvent loginEvent = new LoginEvent();
+                if (response.code() == 200) {
+                    loginEvent.setUserInfo(response.body());
+                } else {
+                    loginEvent.setError(true);
+                }
+                bus.post(loginEvent);
             }
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 LoginEvent event = new LoginEvent();
                 event.setError(true);
                 bus.post(event);
-
             }
         });
     }

@@ -132,16 +132,6 @@ public class VehiclesFragment extends BaseFragment implements
         }
     }
 
-    public void setButtonText ( Parking parking ){
-        if (parking == null) {
-            roundedButton.setText(getString(R.string.action_start_parking));
-            return;
-        }
-        String text = parking.isParking() ?
-                getString(R.string.action_stop_parking) :
-                getString(R.string.action_start_parking);
-        roundedButton.setText(text);
-    }
 
 
     // onclick
@@ -152,28 +142,16 @@ public class VehiclesFragment extends BaseFragment implements
 
         Parking parking = getCurrentParkingFromVehicle(vehicle);
 
-        if (parking == null) {                                                              // TODO meg nincs parkolasi info
-            //parkingButton.setVisibility(View.INVISIBLE);
-            //progressBar.setVisibility(View.INVISIBLE);
-            if (vehicle != null) {
-                eventBusManager.startParking(selectedUser, vehicle);
-                roundedButton.startProcess();
-            }
-            return;
-        }
         Log.d(TAG , vehicle.getPlateNumber());
-        Log.d(TAG , "parking: " + parking.getFinishedAt());
-
         roundedButton.startProcess();
 
-        if (parking.isParking()) {
+        if (parking == null) {
+            eventBusManager.startParking(selectedUser, vehicle);
+            Log.d(TAG, "Start parking event sent");
+        }else {
             eventBusManager.stopParking(selectedUser, parking);
             Log.d(TAG, "stop parking event sent");
-        } else {
-            eventBusManager.startParking(selectedUser, vehicle);
-            Log.d(TAG, "start parking event sent");
         }
-
     }
 
 
@@ -186,23 +164,23 @@ public class VehiclesFragment extends BaseFragment implements
 
 
     private Parking getCurrentParkingFromVehicle(Vehicle vehicle) {
-        if (parkings.getParkings() == null)
-            return null;
-
         for (Parking parking : parkings.getParkings()) {
-            if (parking.getVehicleId() == vehicle.getVehicleId()) {
-                return parking;
+            if (parking.getVehicleId() == vehicle.getVehicleId() ) {
+                if (parking.isParking())
+                    return parking;
             }
         }
         return null;
     }
 
-    private Parking getStoredParkingEvent(Parking eventParking) {
+    private Parking setStoredParkingEvent(Parking eventParking) {
         if (parkings.getParkings() == null)
             return null;
 
         for (Parking parking : parkings.getParkings()) {
             if (parking.getParkingId() == eventParking.getParkingId()) {
+                parkings.getParkings().remove(parking);
+                parkings.getParkings().add(eventParking);
                 return parking;
             }
         }
@@ -217,10 +195,8 @@ public class VehiclesFragment extends BaseFragment implements
                     , Toast.LENGTH_SHORT).show();
             return;
         }
-
         vehicles.setVehicles(event.getVehicles());
         setVehiclesAdapter();
-
     }
 
     @Subscribe
@@ -265,40 +241,24 @@ public class VehiclesFragment extends BaseFragment implements
     @Subscribe
     public void onEvent(ParkingStartEvent event) {
         Log.d(TAG, "parking start event catched");
-        roundedButton.stopProcess();
         Vehicle vehicle = vehicles.getVeichles().get(spinner.getSelectedItemPosition());
-        if (vehicle == null) {
-            return;
-        }
-        Parking parking = getStoredParkingEvent(event.getParking());
-        if (parking == null) {
-            return;
-        }
+        if (vehicle != null) {
+            parkings.getParkings().add(event.getParking());
 
-        parking.setFinishedAt(null);
-
-        if (parking.getVehicleId() == vehicle.getVehicleId()) {
-            setButtonText(parking);
+            if (event.getParking().getVehicleId() == vehicle.getVehicleId()) {
+                roundedButton.stopProcess();
+                roundedButton.setText(getString(R.string.action_stop_parking));
+            }
         }
     }
 
     @Subscribe
     public void onEvent(ParkingStopEvent event) {
-        Log.d(TAG, "parking stop event catched");
-        roundedButton.stopProcess();
-        Parking parking = getStoredParkingEvent(event.getParking());
-        if (parking == null) {
-            Log.e(TAG, "ERROR parking obj");
-            return;
-        }
+        setStoredParkingEvent(event.getParking());
         Vehicle selectedVehicle = vehicles.getVeichles().get(spinner.getSelectedItemPosition());
-        if (selectedVehicle == null) {
-            Log.e(TAG, "ERROR vehicle obj");
-            return;
-        }
-        parking.setFinishedAt(System.currentTimeMillis());
-        if (parking.getVehicleId() == selectedVehicle.getVehicleId()) {
-            setButtonText(parking);
+        if (event.getParking().getVehicleId() == selectedVehicle.getVehicleId()) {
+            roundedButton.setText(getString(R.string.action_start_parking));
+            roundedButton.stopProcess();
         }
     }
 
@@ -309,7 +269,11 @@ public class VehiclesFragment extends BaseFragment implements
             return;
         }
         Parking parking = getCurrentParkingFromVehicle(vehicles.getVeichles().get(position));
-        setButtonText(parking);
+        if (parking != null){
+            roundedButton.setText(getString(R.string.action_stop_parking));
+        }else{
+            roundedButton.setText(getString(R.string.action_start_parking));
+        }
 
     }
 

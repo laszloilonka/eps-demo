@@ -6,7 +6,7 @@ public class Consts {
     }
     public static final String HEADER_AUTHORIZATION = "Authorization";
 
-    public static final String BASE_URL = "http://private-607616-eps2.apiary-mock.com";
+    public static final String BASE_URL = "http://192.168.56.101:8181"; //http://private-607616-eps2.apiary-mock.com";
 
 
 }

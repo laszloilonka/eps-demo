@@ -19,7 +19,7 @@ public interface DemoApi {
 
     // eventbus
 
-    @POST("/user")
+    @POST("/login")
     Call<UserInfo> login(@Body UserCredentials credentiale);
 
     @GET("/user/{userId}/vehicles")
