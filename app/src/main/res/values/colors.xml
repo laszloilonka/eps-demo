@@ -7,5 +7,7 @@
 
     <color name="colorLightBlue">#dbdff5</color>
 
+    <color name="colorLightOrange">#ece0cf</color>
+
     <color name="colorLightGray">#d5d5d5</color>
 </resources>

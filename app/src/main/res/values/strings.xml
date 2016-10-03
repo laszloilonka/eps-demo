@@ -30,7 +30,7 @@
 
     <!-- Strings related to vehicles -->
     <string name="vehicles_added">Your vehicles registered!</string>
-    <string name="vehicles_data">Vehicle data:</string>
+    <string name="vehicles_data">Vehicle history:</string>
     <string name="vehicles_parking">Vehicle parking in:
         229 Chong Qing Nan Lu, Shibei Qu, Qingdao Shi, Shandong Sheng, China
     </string>
@@ -44,7 +44,7 @@
         Sorry! Your current vehicles not available! Please try again later!
     </string>
 
-    <string name="error_add_vehicle">
+    <string name="error_default">
         Sorry! Something went wrong during the process! Please try again later!
     </string>
 

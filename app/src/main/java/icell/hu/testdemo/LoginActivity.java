@@ -21,7 +21,7 @@ public class LoginActivity extends BaseActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new LoginFragment() , this.toString())
+                    .replace(android.R.id.content, new LoginFragment(), this.toString())
                     .commit();
         }
     }

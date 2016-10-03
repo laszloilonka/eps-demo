@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import icell.hu.testdemo.LoginActivity;
 import icell.hu.testdemo.MainActivity;
+import icell.hu.testdemo.ui.adapter.ParkingAdapter;
 import icell.hu.testdemo.ui.dialog.AddVehicleDialog;
 import icell.hu.testdemo.ui.fragment.LoginFragment;
 import icell.hu.testdemo.ui.fragment.VehiclesFragment;
@@ -23,7 +24,6 @@ public interface DemoComponent {
     void inject(LoginActivity activity);
 
 
-
     //Fragment
 
     void inject(LoginFragment fragment);
@@ -31,10 +31,11 @@ public interface DemoComponent {
     void inject(VehiclesFragment fragment);
 
 
-
     //Dialog , view
 
     void inject(AddVehicleDialog dialog);
+
+    void inject(ParkingAdapter adapter);
 
 
 }

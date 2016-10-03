@@ -6,8 +6,8 @@ package icell.hu.testdemo.model;
 
 public class Parking {
 
-    private Integer parkingId;
-    private Integer userId;
+    private Long parkingId;
+    private Long userId;
     private Long vehicleId;
     private Long updatedAt;
     private Long startedAt;
@@ -17,11 +17,11 @@ public class Parking {
 
     }
 
-    public Integer getParkingId() {
+    public Long getParkingId() {
         return parkingId;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -41,15 +41,15 @@ public class Parking {
         return finishedAt;
     }
 
-    public boolean isParking(){
+    public boolean isParking() {
         return finishedAt == null;
     }
 
-    public void setParkingId(Integer parkingId) {
+    public void setParkingId(Long parkingId) {
         this.parkingId = parkingId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

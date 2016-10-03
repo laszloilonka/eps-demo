@@ -65,31 +65,24 @@
             android:textSize="@dimen/adapter_parking_plateNumber"
             android:id="@+id/textView3" />
 
-        <TextView
-            android:id="@+id/vehicle_type"
-            android:text="1967 Chevy impala"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:text="229 Chong Qing Nan Lu, Shibei Qu, Qingdao Shi, Shandong Sheng, China"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vehicle_address"
-            android:layout_below="@+id/vehicle_type"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="23dp" />
 
         <include
+            android:id="@+id/fragment_include"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             layout="@layout/custom_button"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/vehicle_recycler_view"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView3"
+            android:layout_above="@+id/fragment_include" />
 
         <!--Button
             android:text="parking"

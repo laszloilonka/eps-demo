@@ -7,23 +7,19 @@ import icell.hu.testdemo.model.Vehicle;
  * @see icell.hu.testdemo.ui.dialog.AddVehicleDialog
  */
 
-public class AddedVehicleEvent extends EventParent{
+public class VehicleAddedEvent extends EventParent{
 
     Vehicle vehicle;
 
-    public AddedVehicleEvent(){
+    public VehicleAddedEvent(){
 
     }
 
-    public AddedVehicleEvent(Vehicle vehicle) {
+    public VehicleAddedEvent(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 
     public Vehicle getVehicle() {
         return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 }

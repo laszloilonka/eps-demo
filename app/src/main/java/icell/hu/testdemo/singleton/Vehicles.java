@@ -1,7 +1,10 @@
 package icell.hu.testdemo.singleton;
 
+import android.util.LongSparseArray;
+
 import java.util.List;
 
+import icell.hu.testdemo.model.Parking;
 import icell.hu.testdemo.model.Vehicle;
 
 /**
@@ -10,10 +13,18 @@ import icell.hu.testdemo.model.Vehicle;
 
 public interface Vehicles {
 
-    List<Vehicle> getVeichles() ;
 
-    void setVehicles(List<Vehicle> veichles);
+    LongSparseArray<Vehicle> getVehicles();
 
+    LongSparseArray<Parking> getVehicleParkings();
+
+    void addVehicle(Vehicle vehicle);
+
+    void addParking(Parking parking);
+
+    Parking getLatestParking(Long vehicleID);
+
+    List<Parking> getVehicleParkings(Long vehicleID);
 
 
 }

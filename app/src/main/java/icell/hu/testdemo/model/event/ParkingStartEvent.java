@@ -19,4 +19,8 @@ public class ParkingStartEvent extends EventParent{
     public Parking getParking() {
         return parking;
     }
+
+    public void setParking(Parking parking) {
+        this.parking = parking;
+    }
 }

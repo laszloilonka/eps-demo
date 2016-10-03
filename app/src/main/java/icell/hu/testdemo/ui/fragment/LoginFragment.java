@@ -1,13 +1,18 @@
 package icell.hu.testdemo.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -57,8 +62,7 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_login, container, false);                  //  TODO fragment_login
-
+        View layout = inflater.inflate(R.layout.fragment_login, container, false);
         return layout;
     }
 
@@ -69,7 +73,16 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
         roundedButton = new RoundedButton(view, this);
         roundedButton.setText(getString(R.string.action_sign_in_short));
         bus.register(this);
+        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    attemptLogin();
+                }
+                return false;
+            }
+        });
     }
+
 
     @Override
     public void onDestroy() {
@@ -78,6 +91,7 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
     }
 
     private void attemptLogin() {
+        hideKeyboard(getView());
         emailText.setError(null);
         passwordText.setError(null);
 
@@ -131,6 +145,12 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         ((LoginActivity) getActivity()).activityPresenter.
                 startActivity(getActivity(), intent);
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

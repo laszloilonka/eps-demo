@@ -8,21 +8,17 @@ import icell.hu.testdemo.model.Parking;
  * Created by User on 2016. 09. 30..
  */
 
-public class GetParkingsEvent extends EventParent{
+public class ParkingsDownloadedEvent extends EventParent{
 
     List<Parking> parking;
 
-    public GetParkingsEvent(){}
+    public ParkingsDownloadedEvent(){}
 
-    public GetParkingsEvent(List<Parking> parking) {
+    public ParkingsDownloadedEvent(List<Parking> parking) {
         this.parking = parking;
     }
 
     public List<Parking> getParking() {
         return parking;
-    }
-
-    public void setParking(List<Parking> parking) {
-        this.parking = parking;
     }
 }

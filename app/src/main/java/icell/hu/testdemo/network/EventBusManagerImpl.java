@@ -44,19 +44,20 @@ public class EventBusManagerImpl implements EventBusManager{
 
         final Call<UserInfo> loginCall = demoClient.getDemoApi().login( user );
         loginCall.enqueue( new Callback<UserInfo>(){
+
+            LoginEvent event = new LoginEvent();
+
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                LoginEvent loginEvent = new LoginEvent();
                 if (response.code() == 200) {
-                    loginEvent.setUserInfo(response.body());
+                    event.setUserInfo(response.body());
                 } else {
-                    loginEvent.setError(true);
+                    event.setError(true);
                 }
-                bus.post(loginEvent);
+                bus.post(event);
             }
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
-                LoginEvent event = new LoginEvent();
                 event.setError(true);
                 bus.post(event);
             }
@@ -68,13 +69,20 @@ public class EventBusManagerImpl implements EventBusManager{
         Call<List<Vehicle>> vehiclesCall = demoClient.getDemoApi().
                 getVehicles(selectedUser.getUserInfo().getUserId());
         vehiclesCall.enqueue( new Callback<List<Vehicle>>(){
+
+            GetVehiclesEvent event = new GetVehiclesEvent();
+
             @Override
             public void onResponse(Call<List<Vehicle>> call, Response<List<Vehicle>> response) {
-                bus.post( new GetVehiclesEvent(response.body()));
+                if (response.code() == 200) {
+                    event.setVehicles(response.body());
+                } else {
+                    event.setError(true);
+                }
+                bus.post(event);
             }
             @Override
             public void onFailure(Call<List<Vehicle>> call, Throwable t) {
-                GetVehiclesEvent event = new GetVehiclesEvent();
                 event.setError(true);
                 bus.post(event);
             }
@@ -87,13 +95,20 @@ public class EventBusManagerImpl implements EventBusManager{
         Call<Vehicle> vehiclesCall = demoClient.getDemoApi().
                 addVehicle(selectedUser.getUserInfo().getUserId() , vehicle);
         vehiclesCall.enqueue( new Callback<Vehicle>(){
+
+            AddedVehicleEvent event = new AddedVehicleEvent();
+
             @Override
             public void onResponse(Call<Vehicle> call, Response<Vehicle> response) {
-                bus.post(new AddedVehicleEvent(response.body()));
+                if (response.code() == 200) {
+                    event.setVehicle(response.body());
+                } else {
+                    event.setError(true);
+                }
+                bus.post(event);
             }
             @Override
             public void onFailure(Call<Vehicle> call, Throwable t) {
-                AddedVehicleEvent event = new AddedVehicleEvent();
                 event.setError(true);
                 bus.post(event);
             }
@@ -107,14 +122,21 @@ public class EventBusManagerImpl implements EventBusManager{
         Call<List<Parking>>  vehiclesCall = demoClient.getDemoApi().
                 getParkings(selectedUser.getUserInfo().getUserId());
         vehiclesCall.enqueue( new Callback<List<Parking>>(){
+
+            GetParkingsEvent event = new GetParkingsEvent();
+
             @Override
             public void onResponse(Call<List<Parking>> call, Response<List<Parking>> response) {
-                bus.post(new GetParkingsEvent(response.body()));
+                if (response.code() == 200) {
+                    event.setParking(response.body());
+                } else {
+                    event.setError(true);
+                }
+                bus.post(event);
             }
 
             @Override
             public void onFailure(Call<List<Parking>> call, Throwable t) {
-                GetParkingsEvent event = new GetParkingsEvent();
                 event.setError(true);
                 bus.post(event);
             }
@@ -129,13 +151,20 @@ public class EventBusManagerImpl implements EventBusManager{
                 startParking(selectedUser.getUserInfo().getUserId() , vehicle);
 
         vehiclesCall.enqueue( new Callback<Parking>(){
+
+            ParkingStartEvent event = new ParkingStartEvent();
+
             @Override
             public void onResponse(Call<Parking> call, Response<Parking> response) {
-                bus.post(new ParkingStartEvent(response.body()));
+                if (response.code() == 200) {
+                    event.setParking(response.body());
+                } else {
+                    event.setError(true);
+                }
+                bus.post(event);
             }
             @Override
             public void onFailure(Call<Parking> call, Throwable t) {
-                ParkingStartEvent event = new ParkingStartEvent();
                 event.setError(true);
                 bus.post(event);
             }
@@ -148,13 +177,20 @@ public class EventBusManagerImpl implements EventBusManager{
                 stopParking(selectedUser.getUserInfo().getUserId() , parking);
 
         vehiclesCall.enqueue( new Callback<Parking>(){
+
+            ParkingStopEvent event = new ParkingStopEvent();
+
             @Override
             public void onResponse(Call<Parking> call, Response<Parking> response) {
-                bus.post(new ParkingStopEvent(response.body()));
+                if (response.code() == 200) {
+                    event.setParking(response.body());
+                } else {
+                    event.setError(true);
+                }
+                bus.post(event);
             }
             @Override
             public void onFailure(Call<Parking> call, Throwable t) {
-                ParkingStopEvent event = new ParkingStopEvent();
                 event.setError(true);
                 bus.post(event);
             }

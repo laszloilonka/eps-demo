@@ -37,4 +37,11 @@ public class Vehicle {
     public void setPlateNumber(String plateNumber) {
         this.plateNumber = plateNumber;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((Vehicle)obj).getVehicleId() == vehicleId &&
+                ((Vehicle)obj).getUserId() == userId;
+    }
 }

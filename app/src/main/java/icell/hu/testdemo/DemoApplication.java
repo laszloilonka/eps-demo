@@ -30,7 +30,7 @@ public class DemoApplication extends Application {
         appModule = new AppModule(this);
         demoModule = new DemoModule();
 
-        if ( ! LeakCanary . isInAnalyzerProcess ( this ) ) {                                          // heap analysis.
+        if (!LeakCanary.isInAnalyzerProcess(this)) {                                                // heap analysis.
             refWatcher = LeakCanary.install(this);
         }
     }

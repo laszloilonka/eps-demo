@@ -3,6 +3,8 @@ package icell.hu.testdemo.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,14 +32,14 @@ import icell.hu.testdemo.MainActivity;
 import icell.hu.testdemo.R;
 import icell.hu.testdemo.model.Parking;
 import icell.hu.testdemo.model.Vehicle;
+import icell.hu.testdemo.model.event.AddedVehicleEvent;
 import icell.hu.testdemo.model.event.GetParkingsEvent;
 import icell.hu.testdemo.model.event.GetVehiclesEvent;
 import icell.hu.testdemo.model.event.ParkingStartEvent;
 import icell.hu.testdemo.model.event.ParkingStopEvent;
-import icell.hu.testdemo.model.event.AddedVehicleEvent;
-import icell.hu.testdemo.singleton.Parkings;
 import icell.hu.testdemo.singleton.SelectedUser;
 import icell.hu.testdemo.singleton.Vehicles;
+import icell.hu.testdemo.ui.adapter.ParkingAdapter;
 import icell.hu.testdemo.ui.adapter.VehiclesAdapter;
 import icell.hu.testdemo.ui.dialog.AddVehicleDialog;
 import icell.hu.testdemo.ui.view.RoundedButton;
@@ -56,17 +59,20 @@ public class VehiclesFragment extends BaseFragment implements
     @Inject
     Vehicles vehicles;
 
-    @Inject
-    Parkings parkings;
-
     @BindView(R.id.spinner)
     Spinner spinner;
 
     @BindView(R.id.vehicle_container)
     RelativeLayout descriptionContainer;
 
+
+    @BindView(R.id.vehicle_recycler_view)
+    RecyclerView recyclerView;
+
+
     RoundedButton roundedButton;
     VehiclesAdapter vehiclesAdapter;
+    ParkingAdapter parkingAdapter;
 
 
     @Override
@@ -120,37 +126,68 @@ public class VehiclesFragment extends BaseFragment implements
     }
 
     private void reloadData() {
+        vehicles.getVehicles().clear();
+        vehicles.getVehicleParkings().clear();
         eventBusManager.getParkings(selectedUser);
         eventBusManager.getVehicles(selectedUser);
     }
 
     private void setVehiclesAdapter() {
-        vehiclesAdapter = new VehiclesAdapter(vehicles.getVeichles());
+
+        List<Vehicle> list = new ArrayList<>();
+
+        for (int i = 0, nsize = vehicles.getVehicles().size(); i < nsize; i++) {
+            list.add(vehicles.getVehicles().valueAt(i));
+        }
+
+        vehiclesAdapter = new VehiclesAdapter(list);
         spinner.setAdapter(vehiclesAdapter);
         if (descriptionContainer.getVisibility() != View.VISIBLE) {
             descriptionContainer.setVisibility(View.VISIBLE);
         }
     }
 
+    public void setParkingAdapter() {
+        Vehicle vehicle = (Vehicle) spinner.getSelectedItem();
+        if (vehicle != null) {
+            List<Parking> parkingList = vehicles.getVehicleParkings(vehicle.getVehicleId());
+            parkingAdapter = new ParkingAdapter(getView(), parkingList);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(parkingAdapter);
+            recyclerView.setHasFixedSize(true);
+            parkingAdapter.notifyDataSetChanged();
+            recyclerView.invalidate();
+        }
+    }
 
+    public void addParkingToAdapter(Parking parking) {
+        if (parkingAdapter != null) {
+            parkingAdapter.addNewItem(parking);
+        } else
+            setParkingAdapter();
+    }
 
     // onclick
 
     @Override
     public void onButtonClicked() {
-        Vehicle vehicle = vehicles.getVeichles().get(spinner.getSelectedItemPosition());
+        if (!roundedButton.isProcessRunning()) {
+            Vehicle vehicle = (Vehicle) spinner.getSelectedItem();
+            Parking parking = vehicles.getLatestParking(vehicle.getVehicleId());
+            Log.d(TAG, vehicle.getPlateNumber());
+            roundedButton.startProcess();
 
-        Parking parking = getCurrentParkingFromVehicle(vehicle);
-
-        Log.d(TAG , vehicle.getPlateNumber());
-        roundedButton.startProcess();
-
-        if (parking == null) {
-            eventBusManager.startParking(selectedUser, vehicle);
-            Log.d(TAG, "Start parking event sent");
-        }else {
-            eventBusManager.stopParking(selectedUser, parking);
-            Log.d(TAG, "stop parking event sent");
+            if (parking == null) {
+                eventBusManager.startParking(selectedUser, vehicle);
+                Log.d(TAG, "parking is null! start parking!");
+            } else if (parking.isParking()) {
+                eventBusManager.stopParking(selectedUser, parking);
+                Log.d(TAG, "stop parking event sent");
+            } else {
+                eventBusManager.startParking(selectedUser, vehicle);
+                Log.d(TAG, "Start parking event sent! " + parking.getFinishedAt());
+            }
         }
     }
 
@@ -163,31 +200,28 @@ public class VehiclesFragment extends BaseFragment implements
     }
 
 
-    private Parking getCurrentParkingFromVehicle(Vehicle vehicle) {
-        for (Parking parking : parkings.getParkings()) {
-            if (parking.getVehicleId() == vehicle.getVehicleId() ) {
-                if (parking.isParking())
-                    return parking;
-            }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        roundedButton.stopProcess();
+        if (vehicles.getVehicles().size() == 0) {
+            return;
         }
-        return null;
+        Vehicle vehicle = (Vehicle) spinner.getSelectedItem();
+        Parking parking = vehicles.getLatestParking(vehicle.getVehicleId());
+        if (parking != null) {
+            roundedButton.setText(getString(R.string.action_stop_parking));
+        } else {
+            roundedButton.setText(getString(R.string.action_start_parking));
+        }
+        setParkingAdapter();
     }
 
-    private Parking setStoredParkingEvent(Parking eventParking) {
-        if (parkings.getParkings() == null)
-            return null;
-
-        for (Parking parking : parkings.getParkings()) {
-            if (parking.getParkingId() == eventParking.getParkingId()) {
-                parkings.getParkings().remove(parking);
-                parkings.getParkings().add(eventParking);
-                return parking;
-            }
-        }
-        return null;
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
     }
+
+
     // events
-
     @Subscribe
     public void onEvent(GetVehiclesEvent event) {
         if (event.isError()) {
@@ -195,35 +229,28 @@ public class VehiclesFragment extends BaseFragment implements
                     , Toast.LENGTH_SHORT).show();
             return;
         }
-        vehicles.setVehicles(event.getVehicles());
+        for (Vehicle vehicle : event.getVehicles()) {
+            vehicles.addVehicle(vehicle);
+        }
         setVehiclesAdapter();
     }
 
     @Subscribe
     public void onEvent(AddedVehicleEvent event) {
         Log.d(TAG, "Vehicle Added Event catched");
-
         if (event.isError()) {
-            Toast.makeText(getActivity(), getString(R.string.error_add_vehicle)
+            Toast.makeText(getActivity(), getString(R.string.error_default)
                     , Toast.LENGTH_SHORT).show();
             return;
         }
+        vehicles.addVehicle(event.getVehicle());
 
-        if (vehicles.getVeichles() == null)
-            vehicles.setVehicles(new ArrayList<Vehicle>());
-
-        for (Vehicle vehicle : vehicles.getVeichles()) {
-            if (vehicle.getVehicleId() == event.getVehicle().getVehicleId()) {
-                Log.d(TAG, "Vehicle has been created previously...");
-                return;
-            }
-        }
-        vehicles.getVeichles().add(event.getVehicle());
         if (vehiclesAdapter == null) {
             setVehiclesAdapter();
         } else {
             vehiclesAdapter.addNewVehicle(event.getVehicle());
         }
+
     }
 
     // Parkings events
@@ -235,49 +262,46 @@ public class VehiclesFragment extends BaseFragment implements
                     , Toast.LENGTH_SHORT).show();
             return;
         }
-        parkings.setParking(event.getParking());
+        for (Parking parking : event.getParking()) {
+            vehicles.addParking(parking);
+        }
+        setParkingAdapter();
     }
 
     @Subscribe
     public void onEvent(ParkingStartEvent event) {
-        Log.d(TAG, "parking start event catched");
-        Vehicle vehicle = vehicles.getVeichles().get(spinner.getSelectedItemPosition());
-        if (vehicle != null) {
-            parkings.getParkings().add(event.getParking());
+        if (event.isError()) {
+            roundedButton.stopProcess();
+            Toast.makeText(getActivity(), getString(R.string.error_default)
+                    , Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d(TAG, "parking START event catched");
+        Vehicle vehicle = (Vehicle) spinner.getSelectedItem();
+        vehicles.addParking(event.getParking());
 
-            if (event.getParking().getVehicleId() == vehicle.getVehicleId()) {
-                roundedButton.stopProcess();
-                roundedButton.setText(getString(R.string.action_stop_parking));
-            }
+        if (event.getParking().getVehicleId() == vehicle.getVehicleId()) {
+            roundedButton.stopProcess();
+            roundedButton.setText(getString(R.string.action_stop_parking));
+            addParkingToAdapter(event.getParking());
         }
     }
 
     @Subscribe
     public void onEvent(ParkingStopEvent event) {
-        setStoredParkingEvent(event.getParking());
-        Vehicle selectedVehicle = vehicles.getVeichles().get(spinner.getSelectedItemPosition());
-        if (event.getParking().getVehicleId() == selectedVehicle.getVehicleId()) {
-            roundedButton.setText(getString(R.string.action_start_parking));
-            roundedButton.stopProcess();
-        }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        roundedButton.stopProcess();
-        if (vehicles.getVeichles() == null) {
+        if (event.isError()) {
+            Toast.makeText(getActivity(), getString(R.string.error_get_parkings)
+                    , Toast.LENGTH_SHORT).show();
             return;
         }
-        Parking parking = getCurrentParkingFromVehicle(vehicles.getVeichles().get(position));
-        if (parking != null){
-            roundedButton.setText(getString(R.string.action_stop_parking));
-        }else{
+        vehicles.addParking(event.getParking());
+        Vehicle vehicle = (Vehicle) spinner.getSelectedItem();
+        if (event.getParking().getVehicleId() == vehicle.getVehicleId()) {
             roundedButton.setText(getString(R.string.action_start_parking));
+            roundedButton.stopProcess();
+            parkingAdapter.changeRow(event.getParking());
         }
 
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
     }
 }
