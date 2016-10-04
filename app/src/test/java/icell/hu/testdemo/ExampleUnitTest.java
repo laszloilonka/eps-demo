@@ -2,7 +2,6 @@ package icell.hu.testdemo;
 
 import org.junit.Test;
 
-import retrofit2.mock.MockRetrofit;
 
 import static org.junit.Assert.assertEquals;
 

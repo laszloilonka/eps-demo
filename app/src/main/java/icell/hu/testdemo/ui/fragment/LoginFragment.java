@@ -72,7 +72,7 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
         unbinder = ButterKnife.bind(this, view);
         roundedButton = new RoundedButton(view, this);
         roundedButton.setText(getString(R.string.action_sign_in_short));
-        bus.register(this);
+        eventBus.register(this);
         passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
@@ -87,7 +87,8 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
     @Override
     public void onDestroy() {
         super.onDestroy();
-        roundedButton.onDestroy();                          // TODO TEST
+        roundedButton.onDestroy();
+        roundedButton = null;
     }
 
     private void attemptLogin() {
@@ -122,19 +123,16 @@ public class LoginFragment extends BaseFragment implements RoundedButton.Rounded
             roundedButton.startProcess();
             demoCredentials.setUsername(email);
             demoCredentials.setPassword(password);
-            callEventBus();
+            eventBusManager.login(demoCredentials);
         }
-    }
-
-    private void callEventBus() {
-        eventBusManager.login(demoCredentials);
     }
 
 
     @Subscribe
     public void onEvent(LoginEvent login) {
-        roundedButton.stopProcess();
-        if (login.isError()) {
+        if (roundedButton != null)
+            roundedButton.stopProcess();
+        if (login.getUserInfo() == null || login.isError()) {
             Toast.makeText(getActivity(), getString(R.string.error_something_went_wrong) + "!"
                     , Toast.LENGTH_SHORT).show();
             return;

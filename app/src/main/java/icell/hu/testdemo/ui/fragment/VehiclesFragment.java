@@ -62,7 +62,7 @@ public class VehiclesFragment extends BaseFragment implements
     Vehicles vehicles;
 
     @BindView(R.id.spinner)
-    Spinner spinner;
+    public Spinner spinner;
 
     @BindView(R.id.vehicle_container)
     RelativeLayout descriptionContainer;
@@ -83,7 +83,6 @@ public class VehiclesFragment extends BaseFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((DemoApplication) getActivity().getApplication()).getComponent().inject(this);
-        reloadData();
     }
 
     @Override
@@ -110,7 +109,7 @@ public class VehiclesFragment extends BaseFragment implements
         reloadData();
 
         spinner.setOnItemSelectedListener(this);
-        bus.register(this);
+        eventBus.register(this);
 
 
     }

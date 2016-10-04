@@ -21,4 +21,6 @@ public interface EventBusManager {
     void startParking(SelectedUser selectedUser, Vehicle vehicle);
 
     void stopParking(SelectedUser selectedUser, Parking parking);
+
+
 }

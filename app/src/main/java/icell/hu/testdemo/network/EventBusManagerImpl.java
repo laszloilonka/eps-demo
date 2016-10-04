@@ -1,7 +1,5 @@
 package icell.hu.testdemo.network;
 
-import android.util.Log;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
@@ -9,11 +7,11 @@ import java.util.List;
 import icell.hu.testdemo.model.Parking;
 import icell.hu.testdemo.model.UserInfo;
 import icell.hu.testdemo.model.Vehicle;
-import icell.hu.testdemo.model.event.VehicleAddedEvent;
 import icell.hu.testdemo.model.event.LoginEvent;
 import icell.hu.testdemo.model.event.ParkingStartedEvent;
 import icell.hu.testdemo.model.event.ParkingStoppedEvent;
 import icell.hu.testdemo.model.event.ParkingsDownloadedEvent;
+import icell.hu.testdemo.model.event.VehicleAddedEvent;
 import icell.hu.testdemo.model.event.VehiclesDownloadedEvent;
 import icell.hu.testdemo.singleton.DemoCredentials;
 import icell.hu.testdemo.singleton.SelectedUser;
@@ -36,6 +34,11 @@ public class EventBusManagerImpl implements EventBusManager {
         this.demoClient = demoClient;
     }
 
+
+    public void setDemoClient(DemoClient demoClient) {
+        this.demoClient = demoClient;
+    }
+
     // user  -login
     @Override
     public void login(DemoCredentials demoCredentials) {
@@ -50,7 +53,7 @@ public class EventBusManagerImpl implements EventBusManager {
 
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                if (response.code() == 200) {
+                if (response.code() == 200 && response.body() != null) {
                     event.setUserInfo(response.body());
                 } else {
                     event.setError(true);

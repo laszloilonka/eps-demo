@@ -73,4 +73,12 @@ public class DemoApplication extends Application {
         return refWatcher;
     }
 
+    /**
+     * Don't use! Just for Test!
+     */
+    public void reset() {
+        demoComponent = null;
+        appModule = null;
+        demoModule = null;
+    }
 }

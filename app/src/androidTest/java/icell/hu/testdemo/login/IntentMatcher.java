@@ -1,4 +1,4 @@
-package icell.hu.testdemo;
+package icell.hu.testdemo.login;
 
 import android.content.Intent;
 

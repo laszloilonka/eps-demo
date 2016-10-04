@@ -40,9 +40,10 @@ public class RoundedButton {
         this.view = view;
         this.listener = listener;
         backDrawable = view.getResources().getDrawable(R.drawable.layout_bg);
-        unbinder = ButterKnife.bind(this,view);
+        unbinder = ButterKnife.bind(this, view);
         container.setBackground(backDrawable);
-        progressBar.getIndeterminateDrawable().setColorFilter( Color.WHITE,
+        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.getIndeterminateDrawable().setColorFilter(Color.WHITE,
                 android.graphics.PorterDuff.Mode.MULTIPLY);
     }
 
@@ -68,7 +69,7 @@ public class RoundedButton {
         progressBar.setVisibility(View.VISIBLE);
         backDrawable.setColorFilter(
                 view.getResources().getColor(R.color.colorPrimary),
-                PorterDuff.Mode.OVERLAY );
+                PorterDuff.Mode.OVERLAY);
         container.invalidate();
         button.setTextColor(Color.WHITE);
     }
@@ -94,6 +95,7 @@ public class RoundedButton {
     void containerPushed() {
         listener.onButtonClicked();
     }
+
     @OnClick(R.id.custum_button)
     void buttonPushed() {
         listener.onButtonClicked();
