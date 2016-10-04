@@ -17,7 +17,6 @@ import retrofit2.http.Path;
 
 public interface DemoApi {
 
-    // eventbus
 
     @POST("/login")
     Call<UserInfo> login(@Body UserCredentials credentiale);

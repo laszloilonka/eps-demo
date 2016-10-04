@@ -22,4 +22,8 @@ public class VehicleAddedEvent extends EventParent{
     public Vehicle getVehicle() {
         return vehicle;
     }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
 }

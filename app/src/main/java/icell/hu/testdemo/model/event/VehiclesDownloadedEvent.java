@@ -21,4 +21,8 @@ public class VehiclesDownloadedEvent extends EventParent{
     public List<Vehicle> getVehicles() {
         return vehicles;
     }
+
+    public void setVehicles(List<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
 }

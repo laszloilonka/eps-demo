@@ -6,14 +6,14 @@ import icell.hu.testdemo.model.Parking;
  * Created by User on 2016. 09. 30..
  */
 
-public class ParkingStopEvent extends EventParent {
+public class ParkingStartedEvent extends EventParent{
 
     Parking parking;
 
-    public ParkingStopEvent(){}
+    public ParkingStartedEvent(){}
 
-    public ParkingStopEvent(Parking parking) {
-        this.parking = parking;
+    public ParkingStartedEvent(Parking vehicle) {
+        this.parking = vehicle;
     }
 
     public Parking getParking() {

@@ -21,4 +21,8 @@ public class ParkingsDownloadedEvent extends EventParent{
     public List<Parking> getParking() {
         return parking;
     }
+
+    public void setParking(List<Parking> parking) {
+        this.parking = parking;
+    }
 }

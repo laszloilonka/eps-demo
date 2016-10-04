@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,11 +34,11 @@ import icell.hu.testdemo.MainActivity;
 import icell.hu.testdemo.R;
 import icell.hu.testdemo.model.Parking;
 import icell.hu.testdemo.model.Vehicle;
-import icell.hu.testdemo.model.event.AddedVehicleEvent;
-import icell.hu.testdemo.model.event.GetParkingsEvent;
-import icell.hu.testdemo.model.event.GetVehiclesEvent;
-import icell.hu.testdemo.model.event.ParkingStartEvent;
-import icell.hu.testdemo.model.event.ParkingStopEvent;
+import icell.hu.testdemo.model.event.ParkingStartedEvent;
+import icell.hu.testdemo.model.event.ParkingStoppedEvent;
+import icell.hu.testdemo.model.event.ParkingsDownloadedEvent;
+import icell.hu.testdemo.model.event.VehicleAddedEvent;
+import icell.hu.testdemo.model.event.VehiclesDownloadedEvent;
 import icell.hu.testdemo.singleton.SelectedUser;
 import icell.hu.testdemo.singleton.Vehicles;
 import icell.hu.testdemo.ui.adapter.ParkingAdapter;
@@ -74,6 +76,8 @@ public class VehiclesFragment extends BaseFragment implements
     VehiclesAdapter vehiclesAdapter;
     ParkingAdapter parkingAdapter;
 
+    ImageView refreshIcon;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,39 +111,60 @@ public class VehiclesFragment extends BaseFragment implements
 
         spinner.setOnItemSelectedListener(this);
         bus.register(this);
+
+
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_activity_menu, menu);
+        refreshIcon = (ImageView) menu.findItem(R.id.main_refresh).getActionView();
+        if (refreshIcon != null) {
+            startMeunItemAnimation();
+            refreshIcon.setPadding(10 , 10 , 20 , 0);
+            refreshIcon.setImageResource(R.drawable.ic_autorenew_white_36dp);
+            refreshIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startMeunItemAnimation();
+                    reloadData();
+                }
+            });
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.main_refresh:
-                reloadData();
-                break;
+    private void startMeunItemAnimation() {
+        if (refreshIcon != null) {
+            if (refreshIcon.getAnimation() == null) {
+                Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate);
+                rotation.setRepeatCount(Animation.INFINITE);
+                rotation.setFillEnabled(true);
+                rotation.setFillAfter(true);
+                refreshIcon.setAnimation(rotation);
+            }
+            refreshIcon.startAnimation(refreshIcon.getAnimation());
         }
-        return true;
+    }
+    private void stopMeunItemAnimation() {
+        if (refreshIcon != null) {
+            refreshIcon.getAnimation().cancel();
+            //refreshIcon.clearAnimation();
+        }
     }
 
     private void reloadData() {
         vehicles.getVehicles().clear();
         vehicles.getVehicleParkings().clear();
-        eventBusManager.getParkings(selectedUser);
         eventBusManager.getVehicles(selectedUser);
+        eventBusManager.getParkings(selectedUser);
     }
 
     private void setVehiclesAdapter() {
-
         List<Vehicle> list = new ArrayList<>();
-
         for (int i = 0, nsize = vehicles.getVehicles().size(); i < nsize; i++) {
             list.add(vehicles.getVehicles().valueAt(i));
         }
-
         vehiclesAdapter = new VehiclesAdapter(list);
         spinner.setAdapter(vehiclesAdapter);
         if (descriptionContainer.getVisibility() != View.VISIBLE) {
@@ -223,7 +248,7 @@ public class VehiclesFragment extends BaseFragment implements
 
     // events
     @Subscribe
-    public void onEvent(GetVehiclesEvent event) {
+    public void onEvent(VehiclesDownloadedEvent event) {
         if (event.isError()) {
             Toast.makeText(getActivity(), getString(R.string.error_get_vehicles)
                     , Toast.LENGTH_SHORT).show();
@@ -236,7 +261,7 @@ public class VehiclesFragment extends BaseFragment implements
     }
 
     @Subscribe
-    public void onEvent(AddedVehicleEvent event) {
+    public void onEvent(VehicleAddedEvent event) {
         Log.d(TAG, "Vehicle Added Event catched");
         if (event.isError()) {
             Toast.makeText(getActivity(), getString(R.string.error_default)
@@ -250,13 +275,12 @@ public class VehiclesFragment extends BaseFragment implements
         } else {
             vehiclesAdapter.addNewVehicle(event.getVehicle());
         }
-
     }
 
     // Parkings events
     @Subscribe
-    public void onEvent(GetParkingsEvent event) {
-
+    public void onEvent(ParkingsDownloadedEvent event) {
+        stopMeunItemAnimation();
         if (event.isError()) {
             Toast.makeText(getActivity(), getString(R.string.error_get_parkings)
                     , Toast.LENGTH_SHORT).show();
@@ -269,7 +293,7 @@ public class VehiclesFragment extends BaseFragment implements
     }
 
     @Subscribe
-    public void onEvent(ParkingStartEvent event) {
+    public void onEvent(ParkingStartedEvent event) {
         if (event.isError()) {
             roundedButton.stopProcess();
             Toast.makeText(getActivity(), getString(R.string.error_default)
@@ -288,7 +312,7 @@ public class VehiclesFragment extends BaseFragment implements
     }
 
     @Subscribe
-    public void onEvent(ParkingStopEvent event) {
+    public void onEvent(ParkingStoppedEvent event) {
         if (event.isError()) {
             Toast.makeText(getActivity(), getString(R.string.error_get_parkings)
                     , Toast.LENGTH_SHORT).show();
@@ -301,7 +325,5 @@ public class VehiclesFragment extends BaseFragment implements
             roundedButton.stopProcess();
             parkingAdapter.changeRow(event.getParking());
         }
-
-
     }
 }

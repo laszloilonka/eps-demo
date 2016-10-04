@@ -14,13 +14,14 @@ public class MainActivity extends BaseActivity {
         getDemoApplication().getComponent().inject(this);
 
         getSupportActionBar().setElevation(0);
+
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new VehiclesFragment(), this.toString())
                     .commit();
 
             //Toast.makeText(this, selectedUser.getUserInfo().getLastName(), Toast.LENGTH_SHORT).show();
-
         }
     }
 

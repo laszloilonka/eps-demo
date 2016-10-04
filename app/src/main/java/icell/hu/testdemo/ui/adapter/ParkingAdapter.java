@@ -2,6 +2,7 @@ package icell.hu.testdemo.ui.adapter;
 
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import icell.hu.testdemo.R;
 import icell.hu.testdemo.model.Parking;
 
@@ -28,18 +31,19 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.ViewHold
     public List<Parking> parkingList;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.parking_duration)
         public TextView duration;
+        @BindView(R.id.parking_address)
         public TextView address;
+        @BindView(R.id.parking_container)
         public LinearLayout container;
 
         public ViewHolder(View view) {
             super(view);
-            address = (TextView) view.findViewById(R.id.parking_address);
-            duration = (TextView) view.findViewById(R.id.parking_duration);
-            container = (LinearLayout) view.findViewById(R.id.parking_container);
+            ButterKnife.bind(this, view);
         }
     }
-
 
     public ParkingAdapter(View app, List<Parking> parkingList) {
         this.parkingList = parkingList;
@@ -56,14 +60,21 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.ViewHold
 
     @Override
     public void onViewDetachedFromWindow(final ViewHolder holder) {
-        ((ViewHolder) holder).container.clearAnimation();
+        //((ViewHolder) holder).container.clearAnimation();
     }
 
+
+
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        super.onViewRecycled(holder);
+    }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Parking parking = parkingList.get(position);
-        updateRow(holder, parking);
+        bindRow(holder, parking);
         setAnimation(holder.container, parking);
     }
 
@@ -75,8 +86,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.ViewHold
         }
     }
 
-
-    private void updateRow(ViewHolder holder, Parking parking) {
+    private void bindRow(ViewHolder holder, Parking parking) {
 
         holder.address.setText(
                 getPlateNumberFromId(parking.getParkingId()));
@@ -100,7 +110,6 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.ViewHold
         }
     }
 
-
     private String getPlateNumberFromId(Long parkingID) {                                           // TODO
         return "Lorem ipsum dolor sit amet, consectetur adipisicing elit. ID:" + parkingID;
     }
@@ -112,23 +121,22 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.ViewHold
 
 
     public void addNewItem(Parking parking) {
-        if (parking != null && !parkingList.contains(parking)) {
+        if (parking != null) {
             parkingList.add(0, parking);
             notifyDataSetChanged();
         }
     }
 
     public void changeRow(Parking changedParking) {
-        if (changedParking != null) {
-            for (int i = 0; i < parkingList.size(); i++) {
-                if (changedParking.getParkingId() == parkingList.get(i).getParkingId()) {
-                    parkingList.set(i, changedParking);
-                    break;
-                }
+        Log.i(TAG, "Item changed! Parking id: " + changedParking.getParkingId());
+        for (int i = 0; i < parkingList.size(); i++) {
+            Log.i(TAG, "Search for parking id: " + parkingList.get(i).getParkingId());
+            if (changedParking.getParkingId().equals(parkingList.get(i).getParkingId())) {
+                parkingList.set(i, changedParking);
+                Log.d(TAG, "Item frefreshed! Parking id: " + changedParking.getParkingId());
+                break;
             }
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
     }
-
-
 }

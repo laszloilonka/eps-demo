@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
 
     <item
         android:id="@+id/main_refresh"
-        android:title="@string/promt_refresh" />
+        android:icon="@drawable/ic_autorenew_white_36dp"
+        android:orderInCategory="200"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.ImageView"
+        android:title="Refresh"/>
+
 </menu>
