@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.squareup.leakcanary.RefWatcher;
-
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
@@ -68,8 +66,8 @@ public class BaseFragment extends Fragment {
         super.onDestroy();
 
 
-        RefWatcher refWatcher = application.getRefWatcher();
-        refWatcher.watch(this);                                                                     // check memory leak... set this fragment as reference
+       // RefWatcher refWatcher = application.getRefWatcher();
+       // refWatcher.watch(this);                                                                     // check memory leak... set this fragment as reference
     }
 
 

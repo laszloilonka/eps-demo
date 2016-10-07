@@ -2,9 +2,6 @@ package icell.hu.testdemo;
 
 import android.app.Application;
 
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-
 import icell.hu.testdemo.di.AppModule;
 import icell.hu.testdemo.di.DaggerDemoComponent;
 import icell.hu.testdemo.di.DemoComponent;
@@ -21,7 +18,7 @@ public class DemoApplication extends Application {
     private AppModule appModule;
     private DemoModule demoModule;
 
-    private RefWatcher refWatcher;
+    // private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -30,9 +27,9 @@ public class DemoApplication extends Application {
         appModule = new AppModule(this);
         demoModule = new DemoModule();
 
-        if (!LeakCanary.isInAnalyzerProcess(this)) {                                                // heap analysis.
+       /* if (!LeakCanary.isInAnalyzerProcess(this)) {                                                // heap analysis.
             refWatcher = LeakCanary.install(this);
-        }
+        }*/
     }
 
     public DemoComponent getComponent() {
@@ -67,11 +64,12 @@ public class DemoApplication extends Application {
         this.demoModule = demoModule;
     }
 
-
+/*
     public RefWatcher getRefWatcher() {
 
         return refWatcher;
     }
+*/
 
     /**
      * Don't use! Just for Test!
